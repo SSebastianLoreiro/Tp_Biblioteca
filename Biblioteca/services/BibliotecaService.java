@@ -63,4 +63,26 @@ public class BibliotecaService {
 
         System.out.println("Préstamo registrado con éxito: " + libro.getTitulo());
     }
+
+    public List<Libro> buscarLibroPorTituloOIsbn(String textoBuscado) {
+        return catalogoLibros.stream()
+                .filter(l -> l.getTitulo().toLowerCase().contains(textoBuscado.toLowerCase()) ||
+                        l.getIsbn().toLowerCase().contains(textoBuscado.toLowerCase()))
+                .toList();
+    }
+
+    public double calcularMulta(int diasRetraso, double valorLibro) {
+        // Caso base: si no hay más días o superamos el límite de 30
+        if (diasRetraso <= 0) {
+            return 0;
+        }
+        if (diasRetraso > 30) {
+            diasRetraso = 30; // El TP dice máximo 30 días calculables
+        }
+
+        double porcentajeDiario = valorLibro * 0.01; // 1% del valor
+
+        // Paso recursivo
+        return porcentajeDiario + calcularMulta(diasRetraso - 1, valorLibro);
+    }
 }
